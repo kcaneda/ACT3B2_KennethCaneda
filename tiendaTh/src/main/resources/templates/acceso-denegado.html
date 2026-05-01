@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado</title>
+    <style>
+      :root {
+          --purple-200: #c084fc;
+          --purple-300: #7c3aed;
+          --purple-400: #2e1065;
+          --white:      #ffffff;
+          --gray-400:   #6b7280;
+          --gray-600:   #6b7280;
+          --text:       #1e1b4b;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          min-height: 100vh;
+          background: linear-gradient(135deg, var(--purple-400), #6b21a8, var(--purple-200));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 32px 16px;
+      }
+
+      .tarjeta {
+          background: var(--white);
+          border-radius: 16px;
+          padding: 48px 40px 40px;
+          max-width: 420px;
+          width: 100%;
+          text-align: center;
+          box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+      }
+
+      .icono { font-size: 52px; margin-bottom: 20px; display: block; }
+
+      .tarjeta h1 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+      .tarjeta p { font-size: 14px; color: var(--gray-600); line-height: 1.6; margin-bottom: 28px; }
+
+      .tarjeta p strong { color: var(--purple-300); }
+
+      .btn-home {
+          display: inline-block;
+          padding: 11px 28px;
+          background: linear-gradient(135deg, var(--purple-300), var(--purple-200));
+          color: var(--white);
+          font-size: 14px;
+          font-weight: 600;
+          border-radius: 10px;
+          text-decoration: none;
+          transition: opacity 0.2s, transform 0.2s;
+      }
+
+      .btn-home:hover  { opacity: 0.88; transform: scale(1.03); }
+      .btn-home:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+<div class="tarjeta">
+  <h1>Acceso Denegado</h1>
+  <span class="icono">🔒</span>
+  <p>No tiene permisos para acceder a esta ruta</p>
+  <p>Esta ruta es solo para Administradores</p>
+
+  <a th:href="@{/}" class="btn-home">Volver a Inicio</a>
+</div>
+
+</body>
+</html>

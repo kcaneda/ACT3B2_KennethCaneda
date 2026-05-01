@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2e0f3d, #5e1f7a, #9b3dbb);
+            color: #333;
+            padding: 20px;
+        }
+
+        .titulo {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #ead7f5;
+            margin-bottom: 30px;
+        }
+
+        .toolbar {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .boton-nuevo {
+            background: linear-gradient(135deg, #8e24aa, #d81b60);
+        }
+
+        .boton-editar {
+            background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+        }
+
+        .boton-eliminar {
+            background: linear-gradient(135deg, #4a148c, #7b1fa2);
+        }
+
+        .boton-cancelar {
+            background: linear-gradient(135deg, #5e35b1, #9575cd);
+        }
+
+        .boton-crear {
+            background: linear-gradient(135deg, #8e24aa, #ba68c8);
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+
+        .tarjeta-tabla {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #4a148c, #8e24aa);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f5f1f8;
+        }
+
+        tbody tr:hover {
+            background-color: #e6d0f0;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .campo {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #6a1b9a;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30,0,50,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay:target {
+            display: flex;
+        }
+
+        .overlay > div {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 400px;
+            max-width: 90%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mensaje-error {
+            background: #f3e5f5;
+            color: #6a1b9a;
+            border: 1px solid #e1bee7;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .modal-acciones {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .modal {
+            width: 100%;
+        }
+
+        .confirm-msg {
+            margin: 15px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="toolbar">
+    <a href="#modalCrear" class="btn boton-nuevo">Agregar Venta</a>
+    <a href="/home" class="btn">Volver a Inicio</a>
+</div >
+<div class="tarjeta-tabla">
+    <table>
+        <thead>
+        <tr>
+            <th>No.</th>
+            <th>Fecha:</th>
+            <th>Total:</th>
+            <th>Estado:</th>
+            <th>DPI del Cliente:</th>
+            <th>Codigo de Usuario:</th>
+            <th>Acciones:</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ventas : ${venta}">
+            <td th:text="${ventas.codigoVenta}"></td>
+            <td th:text="${ventas.fechaVenta}"></td>
+            <td th:text="${ventas.total}"></td>
+            <td th:text="${ventas.estado} ? 'Activo' : 'Inactivo'"></td>
+            <td th:text="${ventas.clientesDpiCliente}"></td>
+            <td th:text="${ventas.usuariosCodigoUsuario}"></td>
+            <td>
+                <a th:href="@{/ventas/editar/{id}(id=${ventas.codigoVenta})}" class="btn boton-editar">Editar</a>
+                <a th:href="@{/ventas/eliminar/{id}(id=${ventas.codigoVenta})}" class="btn boton-eliminar">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="overlay" id="modalCrear" th:style="${mostrarModalCrear} ? 'display:flex;' : ''">
+    <div class="modal">
+        <h2>Crear Ventas</h2>
+        <form th:action="@{/ventas/crear}" th:object="${nuevaVenta}" method="post">
+            <div>
+                    <div class="campo">
+                        <label>Fecha</label>
+                        <input type="date" th:field="*{fechaVenta}" required>
+                        <div class="mensaje-error" th:if="${#fields.hasErrors('fechaVenta')}"
+                             th:errors="*{fechaVenta}">
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Total</label>
+                        <input type="number" th:field="*{total}" step="0.01" placeholder="Ingrese el total de la venta" required>
+                        <div class="mensaje-error" th:if="${#fields.hasErrors('total')}"
+                             th:errors="*{total}">
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Estado</label>
+                        <select th:field="*{estado}" required>
+                            <option value="true">Activa</option>
+                            <option value="false">Inactiva</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>DPI del Cliente</label>
+                        <select th:field="*{clientesDpiCliente}" required>
+                            <option value="" disabled selected>-Seleccione una opción-</option>
+                            <option th:each="cli : ${listaCliente}" th:value="${cli.dpiCliente}" th:text="${cli.nombreCliente} + ' ' + ${cli.apellidoCliente}"></option>
+                        </select>
+                        <div class="mensaje-error" th:if="${#fields.hasErrors('clientesDpiCliente')}"
+                             th:errors="*{clientesDpiCliente}">
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Usuario</label>
+                        <select th:field="*{usuariosCodigoUsuario}" required>
+                            <option value="" disabled selected>-Seleccione una opción</option>
+                            <option th:each="user : ${listaUsuario}" th:value="${user.codigoUsuario}" th:text="${user.username}"></option>
+                        </select>
+                        <div class="mensaje-error" th:if="${#fields.hasErrors('usuariosCodigoUsuario')}"
+                             th:errors="*{usuariosCodigoUsuario}">
+                        </div>
+                    </div>
+            </div>
+                <div class="modal-acciones">
+                    <a href="/ventas" class="btn boton-cancelar">Cancelar</a>
+                    <button type="submit" class="btn boton-crear">Guardar</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+<div th:if="${ventaAEditar != null or mostrarModalEditar != null}" id="modalEditar" class="overlay" style="display:flex;">
+    <div class="modal">
+        <h2>Editar Venta</h2>
+        <form th:action="@{/ventas/editar/{id}(id=${ventaAEditar.codigoVenta})}" th:object="${ventaAEditar}" method="post">
+            <div>
+                <div class="campo">
+                    <label>Fecha</label>
+                    <input type="date" th:field="*{fechaVenta}" required>
+                    <div class="mensaje-error" th:if="${#fields.hasErrors('fechaVenta')}"
+                         th:errors="*{fechaVenta}">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Total</label>
+                    <input type="number" th:field="*{total}" step="0.01" placeholder="Ingrese el total de la venta" required>
+                    <div class="mensaje-error" th:if="${#fields.hasErrors('total')}"
+                         th:errors="*{total}">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Estado</label>
+                    <select th:field="*{estado}" required>
+                        <option value="true">Activa</option>
+                        <option value="false">Inactiva</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>DPI del Cliente</label>
+                    <select th:field="*{clientesDpiCliente}" required>
+                        <option value="" disabled selected>-Seleccione una opción</option>
+                        <option th:each="cli : ${listaCliente}" th:value="${cli.dpiCliente}" th:text="${cli.nombreCliente} + ' ' + ${cli.apellidoCliente}"></option>
+                    </select>
+                    <div class="mensaje-error" th:if="${#fields.hasErrors('clientesDpiCliente')}"
+                         th:errors="*{clientesDpiCliente}">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Usuario</label>
+                    <select th:field="*{usuariosCodigoUsuario}" required>
+                        <option value="" disabled selected>-Seleccione una opción-</option>
+                        <option th:each="user : ${listaUsuario}" th:value="${user.codigoUsuario}" th:text="${user.username}"></option>
+                    </select>
+                    <div class="mensaje-error" th:if="${#fields.hasErrors('usuariosCodigoUsuario')}"
+                         th:errors="*{usuariosCodigoUsuario}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-acciones">
+                <a href="/ventas" class="btn boton-cancelar">Cancelar</a>
+                <button type="submit" class="btn boton-crear">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:if="${ventaAEliminar != null}" id="modalEliminar" class="overlay" style="display:flex;">
+    <div class="modal">
+        <p>¿Desea eliminar la venta con fecha:
+            <strong th:text="${ventaAEliminar.fechaVenta}"></strong>?
+            Esta acción no puede deshacerse.</p>
+
+        <form th:action="@{/ventas/eliminar/{id}(id=${ventaAEliminar.codigoVenta})}" th:object="${ventaAEliminar}" method="post">
+            <a href="/ventas" class="btn boton-cancelar">Cancelar</a>
+            <button type="submit" class="btn boton-eliminar">Confirmar</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
