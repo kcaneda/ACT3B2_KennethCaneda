@@ -16,3 +16,7 @@ Rutas Protegidas por Roles de esta API:
   -Al intentar acceder a una de estas rutas siendo un usuario normal, se le redirigirá a una página de acceso denegado:
      Cómo debería verse la página de acceso denegado:
      ![img_2.png](img_2.png)
+  
+Paleta de colores:
+
+![img_3.png](img_3.png)
