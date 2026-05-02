@@ -48,7 +48,7 @@ estado boolean not null
 );
 
 
-create table detalleventa(
+create table detalles_venta(
 codigo_detalle_venta int primary key not null auto_increment,
 cantidad int not null,
 precio_unitario decimal(10,2) not null,
